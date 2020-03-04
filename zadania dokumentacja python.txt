@@ -1,0 +1,39 @@
+https://codeme.netlify.com/python_types.html
+
+Jak sprawdziæ czy dany ciag znaków sk³ada siê tylko z cyfr? 
+
+>>> num = "1245678"
+>>> num.isdigit()
+
+Jak wysrodkowac jakis tekst i w puste miejsca wpisac * - '***mam***'
+
+>>> txt =  'mam'
+>>> txt.center(10, '*')
+'***mam****'
+
+Jak usunac jakis znak z tekstu po lewej stronie? 
+
+>>> url = 'www.onet.pl'
+>>> url.lstrip('w')
+'.onet.pl'
+
+Jak sprawdziæ czy dany tekst ma co najmniej jedn¹ du¿¹ literê ? 
+
+>>>
+>>> txt = 'towojTekst'
+>>> txt.isupper()
+False
+>>> txt.isalnum()
+True
+>>> txt.isalnum and not txt.islower()
+True
+>>>
+
+Jak sprawdziæ ile razy w "banana" wystapilo "na"
+
+>>>
+>>>
+>>> txt = 'banana'
+>>> txt.count('na')
+2
+
