@@ -1,0 +1,8 @@
+print("############################")
+print("Kalkulator kosztów podróży")
+print("############################")
+distance = float(input("Podaj ile kilometrów przejechałeś "))
+usage = float(input("Podaj ile Twoje auto spala paliwa na 100Km "))
+cost = float(input("Podaj cene litra paliwa które zatankowałeś "))
+final_cost = round((float((distance/100)*usage*cost))
+print('Przejechałeś ' + str(distance), "km\nkoszt twojej podróży to " + str(final_cost), "złotych")
