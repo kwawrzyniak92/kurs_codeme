@@ -1,0 +1,3 @@
+names = ["Ada", "Juia", "Ruby"]
+for step in range (3):
+    print (step, ":" + names[step])
