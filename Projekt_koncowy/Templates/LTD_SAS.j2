@@ -1,0 +1,70 @@
+#################### SAS OD STRONY KLIENTA ####################
+/configure service customer {{customer_id}} create description "{{customer_name}}"
+/configure service customer {{customer_id}} create contact "{{customer_contact}}"
+/configure service customer {{customer_id}} create phone "{{customer_phone}}"
+
+/configure port {{port_number}} description "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}"
+/configure port {{port_number}} ethernet mode access
+/configure port {{port_number}} ethernet encap-type qinq
+/configure port {{port_number}} ethernet mtu 9212
+/configure port {{port_number}} ethernet lldp dest-mac nearest-bridge admin-status rx
+/configure port {{port_number}} no shutdown
+
+/configure service epipe {{service_id}} customer {{customer_id}} create service-mtu 1522
+/configure service epipe {{service_id}} customer {{customer_id}} create description "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD"
+/configure service epipe {{service_id}} customer {{customer_id}} create service-name "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD"
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy create
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy standby-signaling-master
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy revert-time 60
+/configure service epipe {{service_id}} customer {{customer_id}} create sap {{port_number}}:{{vlan}}.* create ingress qos 23
+/configure service epipe {{service_id}} customer {{customer_id}} create sap {{port_number}}:{{vlan}}.* create ingress meter-override meter 1 create rate cir 0 pir {{up_rate}}
+/configure qos access-egress {{qos}} create remarking
+/configure port {{port_number}} ethernet access egress qos {{qos}}
+/configure service epipe {{service_id}} customer {{customer_id}} create no shutdown
+/configure service epipe {{service_id}} customer {{customer_id}} create spoke-sdp {{sdp_id_primary}}:{{service_id}} endpoint Redundancy create no shutdown
+/configure service epipe {{service_id}} customer {{customer_id}} create spoke-sdp {{sdp_id_secondary}}:{{service_id}} endpoint Redundancy create no shutdown
+
+#################### STYK DC PRIMARY ################
+
+/configure service customer {{customer_id}} create description "{{customer_name}}"
+/configure service customer {{customer_id}} create contact "{{customer_contact}}"
+/configure service customer {{customer_id}} create phone "{{customer_phone}}"
+
+/configure service epipe {{service_id}} customer {{customer_id}} create service-mtu 2500
+/configure service epipe {{service_id}} customer {{customer_id}} create description "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD-PRIMARY"
+/configure service epipe {{service_id}} customer {{customer_id}} create service-name "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD-PRIMARY"
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy create
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy standby-signaling-master
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy revert-time 60
+/configure service epipe {{service_id}} customer {{customer_id}} create sap {{port_number}}:{{vlan}}.* create ingress qos 23
+/configure service epipe {{service_id}} customer {{customer_id}} create sap {{port_number}}:{{vlan}}.* create ingress meter-override meter 1 create rate cir 0 pir {{up_rate}}
+/configure qos access-egress {{qos}} create remarking
+/configure port {{port_number}} ethernet access egress qos {{qos}}
+/configure service epipe {{service_id}} customer {{customer_id}} create spoke-sdp {{sdp_id_primary}}:{{service_id}} endpoint Redundancy create no shutdown
+/configure service epipe {{service_id}} customer {{customer_id}} create no shutdown
+
+
+#################### STYK DC SECONDARY ##############
+### Klient ###
+/configure service customer {{customer_id}} create description "{{customer_name}}"
+/configure service customer {{customer_id}} create contact "{{customer_contact}}"
+/configure service customer {{customer_id}} create phone "{{customer_phone}}"
+
+### Usluga ###
+/configure service epipe {{service_id}} customer {{customer_id}} create description "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD-SECONDARY"
+/configure service epipe {{service_id}} customer {{customer_id}} create service-name "{{customer_name}}_{{customer_adress}}_cID:{{customer_id}}_sID:{{service_id}}-DC-LTD-SECONDARY"
+/configure service epipe {{service_id}} customer {{customer_id}} create service-mtu 2500
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy create
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy standby-signaling-master
+/configure service epipe {{service_id}} customer {{customer_id}} create endpoint Redundancy revert-time 60
+/configure service epipe {{service_id}} customer {{customer_id}} create sap lag-1:{{vlan}}.* create ingress qos 23
+/configure service epipe {{service_id}} customer {{customer_id}} create sap lag-1:{{vlan}}.* create ingress queue-override queue 4 create rate {{up_rate}} cir 0
+/configure service epipe {{service_id}} customer {{customer_id}} create sap lag-1:{{vlan}}.* create egress qos 28
+/configure service epipe {{service_id}} customer {{customer_id}} create sap lag-1:{{vlan}}.* create egress queue-override queue 4 create rate {{down_rate}} cir 0
+/configure service epipe {{service_id}} customer {{customer_id}} create spoke-sdp {{sdp_id_secondary}}:{{service_id}} endpoint Redundancy create no shutdown
+/configure service epipe {{service_id}} customer {{customer_id}} create no shutdown
+
+
+#################### DANE USLUGI ####################
+cID:{{customer_id}}_sID:{{service_id}}
+{{switch_name}} port {{port_number}}
